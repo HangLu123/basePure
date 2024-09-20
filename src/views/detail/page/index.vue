@@ -49,7 +49,7 @@ const backList = () => {
 
 <template>
   <div>
-    <p class="mb-2" @click="backList">返回</p>
+    <el-button class="mb-2" @click="backList">返回列表页</el-button>
     <el-card shadow="never" :style="elStyle">
       <template #header>
         <div class="card-header">

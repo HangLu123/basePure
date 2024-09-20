@@ -14,8 +14,8 @@ if (languageType == "zh") {
 defineOptions({
   name: "Welcome"
 });
-const goPermisstion = () => {
-  router.push("/permission");
+const goDetail = () => {
+  router.push("/detail");
 };
 const tableData = [
   {
@@ -43,7 +43,7 @@ const tableData = [
 
 <template>
   <h1>{{ t("login.pureUsername") }}</h1>
-  <el-button @click="goPermisstion">123</el-button>
+  <el-button @click="goDetail">打开详情页 </el-button>
   <el-table :data="tableData" style="width: 100%">
     <el-table-column prop="date" label="Date" width="180" />
     <el-table-column prop="name" label="Name" width="180" />

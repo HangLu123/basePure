@@ -1,5 +1,5 @@
 {
-  "name": "pure-admin-thin",
+  "name": "base-front-end",
   "version": "5.8.0",
   "private": true,
   "type": "module",
@@ -21,11 +21,8 @@
     "preinstall": "npx only-allow pnpm"
   },
   "keywords": [
-    "pure-admin-thin",
-    "vue-pure-admin",
     "element-plus",
     "tailwindcss",
-    "pure-admin",
     "typescript",
     "pinia",
     "vue3",

@@ -23,9 +23,9 @@ export default {
       }
     },
     {
-      path: "/permission",
-      name: "PermissionButtonRouter",
-      component: () => import("@/views/permission/page/index.vue"),
+      path: "/detail",
+      name: "Detail",
+      component: () => import("@/views/detail/page/index.vue"),
       meta: {
         title: $t("menus.pureHome"),
         showLink: VITE_HIDE_HOME === "true" ? false : true

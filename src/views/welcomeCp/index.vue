@@ -5,7 +5,7 @@ defineOptions({
   name: "WelcomeCp"
 });
 const goPermisstion = () => {
-  router.push("/permission");
+  router.push("/welcome");
 };
 </script>
 

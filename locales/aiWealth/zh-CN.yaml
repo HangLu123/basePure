@@ -1,0 +1,17 @@
+aiWealth:
+  model: 模型
+  dataSet: 数据集
+  code: 代码
+  menus:
+    pureHome: 首页
+    pureLogin: 登录
+    pureAbnormal: 异常页面
+    pureFourZeroFour: "404"
+    pureFourZeroOne: "403"
+    pureFive: "500"
+    purePermission: 权限管理
+    purePermissionPage: 页面权限
+    purePermissionButton: 按钮权限
+    purePermissionButtonRouter: 路由返回按钮权限
+    purePermissionButtonLogin: 登录接口返回按钮权限
+

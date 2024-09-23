@@ -42,6 +42,11 @@ export const getLogin = (data?: any) => {
   );
 };
 
+/** 登录 */
+export const getNameSpace = () => {
+  return http.request<UserResult>("get", `jhcontainer/namespace/list`);
+};
+
 /** 刷新`token` */
 export const refreshTokenApi = (data?: object) => {
   return http.request<RefreshTokenResult>("post", "/refresh-token", { data });

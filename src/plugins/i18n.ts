@@ -9,17 +9,48 @@ import enLocale from "element-plus/es/locale/lang/en";
 import zhLocale from "element-plus/es/locale/lang/zh-cn";
 
 const siphonI18n = (function () {
-  // 仅初始化一次国际化配置
-  let cache = Object.fromEntries(
-    Object.entries(
-      import.meta.glob("../../locales/*.y(a)?ml", { eager: true })
-    ).map(([key, value]: any) => {
-      const matched = key.match(/([A-Za-z0-9-_]+)\./i)[1];
-      return [matched, value.default];
-    })
-  );
+  // 递归获取所有符合条件的文件
+  const files = import.meta.glob("../../locales/**/*.y(a)?ml", { eager: true });
+  // 初始化缓存对象
+  let cache = {};
+
+  // 遍历所有文件并合并同名文件
+  Object.entries(files).forEach(([key, value]) => {
+    const matched = key.match(/\/([A-Za-z0-9-_]+)\.y(a)?ml$/i)[1];
+
+    if (!cache[matched]) {
+      cache[matched] = {};
+    }
+
+    // 断言 value 有 default 属性
+    const fileContent = value as { default: any };
+    // 合并文件内容
+    mergeDeep(cache[matched], fileContent.default);
+  });
+
+  // 深度合并对象的辅助函数
+  function mergeDeep(target, source) {
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) {
+        if (
+          typeof source[key] === "object" &&
+          source[key] !== null &&
+          !Array.isArray(source[key])
+        ) {
+          if (typeof target[key] !== "object" || target[key] === null) {
+            target[key] = {};
+          }
+          mergeDeep(target[key], source[key]);
+        } else {
+          target[key] = source[key];
+        }
+      }
+    }
+  }
+
+  // 返回一个函数，根据前缀获取对应的国际化数据
   return (prefix = "zh-CN") => {
-    return cache[prefix];
+    return cache[prefix] || {};
   };
 })();
 

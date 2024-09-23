@@ -30,7 +30,19 @@ const {
 } = useNav();
 
 const menuData = computed(() => {
-  return usePermissionStoreHook().wholeMenus;
+  // 获取所有的菜单
+  const menus = usePermissionStoreHook().wholeMenus;
+
+  // 过滤掉 path 为 / 的菜单
+  const filteredMenus = menus.filter(menu => menu.path !== "/");
+
+  // 遍历过滤后的菜单，移除 children 属性
+  filteredMenus.forEach(menu => {
+    delete menu.children; // 移除当前菜单的 children 属性
+  });
+
+  // 返回处理后的菜单数据
+  return filteredMenus;
 });
 
 const loading = computed(() => (menuData.value.length === 0 ? true : false));
@@ -42,6 +54,7 @@ const defaultActive = computed(() =>
 watch(
   () => [route.path, usePermissionStoreHook().wholeMenus],
   () => {
+    console.log(route.meta);
     if (route.path.includes("/redirect")) return;
     menuSelect(route.path);
   }

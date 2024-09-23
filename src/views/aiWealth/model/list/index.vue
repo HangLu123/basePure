@@ -2,8 +2,10 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useRouter } from "vue-router";
+import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
 const router = useRouter();
 import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
+import { useUserStoreHook } from "@/store/modules/user";
 import { languageType } from "@/utils/language-set";
 const { translationCh, translationEn } = useTranslationLang();
 if (languageType == "zh") {
@@ -14,8 +16,11 @@ if (languageType == "zh") {
 defineOptions({
   name: "Welcome"
 });
+const addModel = () => {
+  router.push("/model/create");
+};
 const goDetail = () => {
-  router.push("/detail");
+  router.push("/model/detail");
 };
 const tableData = [
   {
@@ -39,11 +44,18 @@ const tableData = [
     address: "No. 189, Grove St, Los Angeles"
   }
 ];
+
+onMounted(() => {
+  useUserStoreHook()
+    .getNameSpace()
+    .then((res: any) => {});
+});
 </script>
 
 <template>
   <h1>{{ t("login.pureUsername") }}</h1>
   <el-button @click="goDetail">打开详情页 </el-button>
+  <el-button @click="addModel">新建模型 </el-button>
   <el-table :data="tableData" style="width: 100%">
     <el-table-column prop="date" label="Date" width="180" />
     <el-table-column prop="name" label="Name" width="180" />

@@ -49,7 +49,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
           changeOrigin: true, // 是否是跨域请求?肯定是啊,不跨域就没有必要配置这个proxyTable了
           rewrite: path => path.replace("^/appform", "/appform")
         },
-        "/jhinsight": {
+        "/jhcontainer": {
           target: DEV_IP,
           secure: false, // if you want to verify the SSL Certs
           changeOrigin: true, // 是否是跨域请求?肯定是啊,不跨域就没有必要配置这个proxyTable了

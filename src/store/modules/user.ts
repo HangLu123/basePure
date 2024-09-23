@@ -4,6 +4,7 @@ import {
   type UserResult,
   type RefreshTokenResult,
   getLogin,
+  getNameSpace,
   refreshTokenApi
 } from "@/api/user";
 import { type DataInfo, setToken, userKey } from "@/utils/auth";
@@ -60,6 +61,19 @@ export const useUserStore = defineStore({
     async loginByUsername(data) {
       return new Promise<UserResult>((resolve, reject) => {
         getLogin(data)
+          .then(data => {
+            if (data?.success) setToken(data.data);
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    /** 查询namespace */
+    async getNameSpace() {
+      return new Promise<UserResult>((resolve, reject) => {
+        getNameSpace()
           .then(data => {
             if (data?.success) setToken(data.data);
             resolve(data);

@@ -14,7 +14,6 @@
     }
   }
 
-  /* 修复 windows 下双滚动条问题 https://github.com/pure-admin/vue-pure-admin/pull/936#issuecomment-1968125992 */
   .el-popper.pure-scrollbar {
     overflow: hidden;
   }
@@ -338,14 +337,15 @@
 
     /* 无子菜单时激活 border-bottom */
     a > .is-active.submenu-title-noDropdown {
-      border-bottom: 2px solid var(--el-menu-active-color);
+      border-top: 3px solid var(--el-menu-active-color);
+      box-sizing: border-box;
     }
 
     .el-menu--popup {
       background-color: $subMenuBg !important;
 
       a > .is-active.submenu-title-noDropdown {
-        border-bottom: none;
+        border-top: none;
       }
 
       .el-menu-item {

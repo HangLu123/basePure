@@ -7,7 +7,7 @@ import {
   getNameSpace,
   refreshTokenApi
 } from "@/api/user";
-import { type DataInfo, setToken, userKey } from "@/utils/auth";
+import { type DataInfo, userKey } from "@/utils/auth";
 
 export const useUserStore = defineStore({
   id: "pure-user",
@@ -62,7 +62,6 @@ export const useUserStore = defineStore({
       return new Promise<UserResult>((resolve, reject) => {
         getLogin(data)
           .then(data => {
-            if (data?.success) setToken(data.data);
             resolve(data);
           })
           .catch(error => {
@@ -75,7 +74,6 @@ export const useUserStore = defineStore({
       return new Promise<UserResult>((resolve, reject) => {
         getNameSpace()
           .then(data => {
-            if (data?.success) setToken(data.data);
             resolve(data);
           })
           .catch(error => {
@@ -89,7 +87,6 @@ export const useUserStore = defineStore({
         refreshTokenApi(data)
           .then(data => {
             if (data) {
-              setToken(data.data);
               resolve(data);
             }
           })

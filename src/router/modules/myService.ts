@@ -1,13 +1,12 @@
 import { $t } from "@/plugins/i18n";
-const { VITE_HIDE_HOME } = import.meta.env;
 
 export default [
   {
-    path: "/model",
-    name: "Model",
+    path: "/myService",
+    name: "MyService",
     component: () => import("@/views/aiWealth/model/list/index.vue"),
     meta: {
-      title: $t("aiWealth.model.name"),
+      title: "我的服务",
       showLink: false
     },
     children: [
@@ -16,7 +15,7 @@ export default [
         name: "ModelDetail",
         component: () => import("@/views/aiWealth/model/detail/index.vue"),
         meta: {
-          title: $t("aiWealth.model.name"),
+          title: $t("aiWealth.model"),
           showLink: false,
           activePath: "/model"
         }
@@ -26,29 +25,11 @@ export default [
         name: "ModelCreate",
         component: () => import("@/views/aiWealth/model/create/index.vue"),
         meta: {
-          title: $t("aiWealth.model.name"),
+          title: $t("aiWealth.model"),
           showLink: false,
           activePath: "/model"
         }
       }
     ]
-  },
-  {
-    path: "/detail",
-    name: "Detail",
-    component: () => import("@/views/detail/page/index.vue"),
-    meta: {
-      title: $t("aiWealth.dataSet.name"),
-      showLink: VITE_HIDE_HOME === "true" ? false : true
-    }
-  },
-  {
-    path: "/code",
-    name: "Code",
-    component: () => import("@/views/detail/page/index.vue"),
-    meta: {
-      title: $t("aiWealth.code.name"),
-      showLink: VITE_HIDE_HOME === "true" ? false : true
-    }
   }
 ] satisfies Array<RouteConfigsTable>;

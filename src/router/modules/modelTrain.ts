@@ -3,11 +3,11 @@ const { VITE_HIDE_HOME } = import.meta.env;
 
 export default [
   {
-    path: "/model",
-    name: "Model",
+    path: "/batchSubmit",
+    name: "BatchSubmit",
     component: () => import("@/views/aiWealth/model/list/index.vue"),
     meta: {
-      title: $t("aiWealth.model.name"),
+      title: "批作业提交",
       showLink: false
     },
     children: [
@@ -16,7 +16,7 @@ export default [
         name: "ModelDetail",
         component: () => import("@/views/aiWealth/model/detail/index.vue"),
         meta: {
-          title: $t("aiWealth.model.name"),
+          title: $t("aiWealth.model"),
           showLink: false,
           activePath: "/model"
         }
@@ -26,7 +26,7 @@ export default [
         name: "ModelCreate",
         component: () => import("@/views/aiWealth/model/create/index.vue"),
         meta: {
-          title: $t("aiWealth.model.name"),
+          title: $t("aiWealth.model"),
           showLink: false,
           activePath: "/model"
         }
@@ -34,20 +34,20 @@ export default [
     ]
   },
   {
-    path: "/detail",
-    name: "Detail",
+    path: "/train",
+    name: "Train",
     component: () => import("@/views/detail/page/index.vue"),
     meta: {
-      title: $t("aiWealth.dataSet.name"),
+      title: "大模型训练",
       showLink: VITE_HIDE_HOME === "true" ? false : true
     }
   },
   {
-    path: "/code",
-    name: "Code",
+    path: "/experimentManagement",
+    name: "ExperimentManagement",
     component: () => import("@/views/detail/page/index.vue"),
     meta: {
-      title: $t("aiWealth.code.name"),
+      title: "实验管理",
       showLink: VITE_HIDE_HOME === "true" ? false : true
     }
   }

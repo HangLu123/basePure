@@ -3,7 +3,6 @@ import "animate.css";
 // 引入 src/components/ReIcon/src/offlineIcon.ts 文件中所有使用addIcon添加过的本地图标
 import "@/components/ReIcon/src/offlineIcon";
 import { setType } from "./types";
-import { useI18n } from "vue-i18n";
 import { useLayout } from "./hooks/useLayout";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useSettingStoreHook } from "@/store/modules/settings";
@@ -26,10 +25,11 @@ import {
 
 import LayNavbar from "./components/lay-navbar/index.vue";
 import LayContent from "./components/lay-content/index.vue";
+import LaySetting from "./components/lay-setting/index.vue";
 import NavVertical from "./components/lay-sidebar/NavVertical.vue";
+import NavHorizontal from "./components/lay-sidebar/NavHorizontal.vue";
 import BackTopIcon from "@/assets/svg/back_top.svg?component";
 
-const { t } = useI18n();
 const appWrapperRef = ref();
 const { isDark } = useDark();
 const { layout } = useLayout();
@@ -130,10 +130,24 @@ const LayHeader = defineComponent({
       "div",
       {
         class: { "fixed-header": set.fixedHeader },
-        style: ["box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08)"]
+        style: [
+          set.hideTabs && layout.value.includes("horizontal")
+            ? isDark.value
+              ? "box-shadow: 0 1px 4px #0d0d0d"
+              : "box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08)"
+            : ""
+        ]
       },
       {
-        default: () => [h(LayNavbar)]
+        default: () => [
+          !pureSetting.hiddenSideBar &&
+          (layout.value.includes("vertical") || layout.value.includes("mix"))
+            ? h(LayNavbar)
+            : null,
+          !pureSetting.hiddenSideBar && layout.value.includes("horizontal")
+            ? h(NavHorizontal)
+            : null
+        ]
       }
     );
   }
@@ -151,25 +165,37 @@ const LayHeader = defineComponent({
       class="app-mask"
       @click="useAppStoreHook().toggleSideBar()"
     />
-    <NavVertical v-show="!pureSetting.hiddenSideBar" />
+    <NavVertical
+      v-show="
+        !pureSetting.hiddenSideBar &&
+        (layout.includes('vertical') || layout.includes('mix'))
+      "
+    />
     <div
       :class="[
         'main-container',
         pureSetting.hiddenSideBar ? 'main-hidden' : ''
       ]"
     >
-      <el-scrollbar>
+      <div v-if="set.fixedHeader">
+        <LayHeader />
+        <!-- 主体内容 -->
+        <LayContent :fixed-header="set.fixedHeader" />
+      </div>
+      <el-scrollbar v-else>
         <el-backtop
-          :title="t('buttons.pureBackTop')"
+          title="回到顶部"
           target=".main-container .el-scrollbar__wrap"
         >
           <BackTopIcon />
         </el-backtop>
-        <LayHeader v-show="!pureSetting.hiddenSideBar" />
+        <LayHeader />
         <!-- 主体内容 -->
         <LayContent :fixed-header="set.fixedHeader" />
       </el-scrollbar>
     </div>
+    <!-- 系统设置 -->
+    <LaySetting />
   </div>
 </template>
 

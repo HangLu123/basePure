@@ -1,7 +1,8 @@
-// import "@/utils/sso";
 import NProgress from "@/utils/progress";
 import { buildHierarchyTree } from "@/utils/tree";
 import remainingRouter from "./modules/remaining";
+const Layout = () => import("@/layout/index.vue");
+import { $t } from "@/plugins/i18n";
 import {
   getHistoryMode,
   formatTwoStageRoutes,
@@ -26,7 +27,19 @@ const modules: Record<string, any> = import.meta.glob(
 );
 
 /** 原始静态路由（未做任何处理） */
-const routes = [];
+const routes = [
+  {
+    path: "/",
+    name: "Home",
+    component: Layout,
+    redirect: "/model",
+    meta: {
+      title: $t("aiWealth.model"),
+      icon: "ep:home-filled",
+      rank: 0
+    }
+  }
+];
 
 Object.keys(modules).forEach(key => {
   routes.push(modules[key].default);

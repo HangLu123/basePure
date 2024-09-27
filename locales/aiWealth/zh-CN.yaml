@@ -1,7 +1,10 @@
 aiWealth:
-  model: 模型
-  dataSet: 数据集
-  code: 代码
+  model:
+    name: 模型
+  dataSet:
+    name: 数据集
+  code:
+    name: 代码
   menus:
     pureHome: 首页
     pureLogin: 登录

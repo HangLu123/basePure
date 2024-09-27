@@ -7,6 +7,7 @@ const router = useRouter();
 import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
 import { useUserStoreHook } from "@/store/modules/user";
 import { languageType } from "@/utils/language-set";
+import { localForage } from "@/utils/localforage";
 const { translationCh, translationEn } = useTranslationLang();
 if (languageType == "zh") {
   translationCh();
@@ -17,6 +18,7 @@ defineOptions({
   name: "Welcome"
 });
 const addModel = () => {
+  localForage().setItem("name", "leon");
   router.push("/model/create");
 };
 const goDetail = () => {

@@ -30,7 +30,6 @@ initStorage();
 const { t } = useI18n();
 const { dataTheme, overallStyle, dataThemeChange } = useDataThemeChange();
 dataThemeChange(overallStyle.value);
-const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
 const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({

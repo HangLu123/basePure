@@ -3,11 +3,11 @@ const { VITE_HIDE_HOME } = import.meta.env;
 
 export default [
   {
-    path: "/model",
-    name: "Model",
+    path: "/devEnv",
+    name: "DevEnv",
     component: () => import("@/views/aiWealth/model/list/index.vue"),
     meta: {
-      title: $t("aiWealth.model.name"),
+      title: "开发环境",
       showLink: false
     },
     children: [
@@ -16,7 +16,7 @@ export default [
         name: "ModelDetail",
         component: () => import("@/views/aiWealth/model/detail/index.vue"),
         meta: {
-          title: $t("aiWealth.model.name"),
+          title: $t("aiWealth.model"),
           showLink: false,
           activePath: "/model"
         }
@@ -26,7 +26,7 @@ export default [
         name: "ModelCreate",
         component: () => import("@/views/aiWealth/model/create/index.vue"),
         meta: {
-          title: $t("aiWealth.model.name"),
+          title: $t("aiWealth.model"),
           showLink: false,
           activePath: "/model"
         }
@@ -34,20 +34,11 @@ export default [
     ]
   },
   {
-    path: "/detail",
-    name: "Detail",
+    path: "/visualModel",
+    name: "VisualModel",
     component: () => import("@/views/detail/page/index.vue"),
     meta: {
-      title: $t("aiWealth.dataSet.name"),
-      showLink: VITE_HIDE_HOME === "true" ? false : true
-    }
-  },
-  {
-    path: "/code",
-    name: "Code",
-    component: () => import("@/views/detail/page/index.vue"),
-    meta: {
-      title: $t("aiWealth.code.name"),
+      title: "可视化模型",
       showLink: VITE_HIDE_HOME === "true" ? false : true
     }
   }

@@ -18,9 +18,7 @@ const {
   username,
   userAvatar,
   avatarsStyle,
-  toggleSideBar,
-  getDropdownItemStyle,
-  getDropdownItemClass
+  toggleSideBar
 } = useNav();
 
 const { t, locale, translationCh, translationEn } = useTranslationLang();
@@ -48,11 +46,7 @@ const { t, locale, translationCh, translationEn } = useTranslationLang();
         />
         <template #dropdown>
           <el-dropdown-menu class="translation">
-            <el-dropdown-item
-              :style="getDropdownItemStyle(locale, 'zh')"
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
-              @click="translationCh"
-            >
+            <el-dropdown-item @click="translationCh">
               <IconifyIconOffline
                 v-show="locale === 'zh'"
                 class="check-zh"
@@ -60,11 +54,7 @@ const { t, locale, translationCh, translationEn } = useTranslationLang();
               />
               简体中文
             </el-dropdown-item>
-            <el-dropdown-item
-              :style="getDropdownItemStyle(locale, 'en')"
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
-              @click="translationEn"
-            >
+            <el-dropdown-item @click="translationEn">
               <span v-show="locale === 'en'" class="check-en">
                 <IconifyIconOffline :icon="Check" />
               </span>
@@ -73,6 +63,13 @@ const { t, locale, translationCh, translationEn } = useTranslationLang();
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+      <span
+        class="set-icon navbar-bg-hover"
+        title="打开系统配置"
+        @click="onPanel"
+      >
+        <IconifyIconOffline :icon="Setting" />
+      </span>
     </div>
   </div>
 </template>

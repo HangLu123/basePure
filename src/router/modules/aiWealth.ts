@@ -1,7 +1,17 @@
 import { $t } from "@/plugins/i18n";
-const { VITE_HIDE_HOME } = import.meta.env;
-
+const Layout = () => import("@/layout/index.vue");
 export default [
+  {
+    path: "/",
+    name: "Home",
+    component: Layout,
+    redirect: "/model",
+    meta: {
+      title: $t("aiWealth.model"),
+      icon: "ep:home-filled",
+      rank: 0
+    }
+  },
   {
     path: "/model",
     name: "Model",
@@ -34,21 +44,65 @@ export default [
     ]
   },
   {
-    path: "/detail",
-    name: "Detail",
-    component: () => import("@/views/detail/page/index.vue"),
+    path: "/dataSet",
+    name: "DataSet",
+    component: () => import("@/views/aiWealth/dataSet/list/index.vue"),
     meta: {
       title: $t("aiWealth.dataSet.name"),
-      showLink: VITE_HIDE_HOME === "true" ? false : true
-    }
+      showLink: false
+    },
+    children: [
+      {
+        path: "/dataSet/detail",
+        name: "ModelDetail",
+        component: () => import("@/views/aiWealth/dataSet/detail/index.vue"),
+        meta: {
+          title: $t("aiWealth.dataSet.name"),
+          showLink: false,
+          activePath: "/dataSet"
+        }
+      },
+      {
+        path: "/dataSet/create",
+        name: "ModelCreate",
+        component: () => import("@/views/aiWealth/dataSet/create/index.vue"),
+        meta: {
+          title: $t("aiWealth.dataSet.name"),
+          showLink: false,
+          activePath: "/dataSet"
+        }
+      }
+    ]
   },
   {
     path: "/code",
     name: "Code",
-    component: () => import("@/views/detail/page/index.vue"),
+    component: () => import("@/views/aiWealth/code/list/index.vue"),
     meta: {
       title: $t("aiWealth.code.name"),
-      showLink: VITE_HIDE_HOME === "true" ? false : true
-    }
+      showLink: false
+    },
+    children: [
+      {
+        path: "/code/detail",
+        name: "ModelDetail",
+        component: () => import("@/views/aiWealth/code/detail/index.vue"),
+        meta: {
+          title: $t("aiWealth.code.name"),
+          showLink: false,
+          activePath: "/code"
+        }
+      },
+      {
+        path: "/code/create",
+        name: "ModelCreate",
+        component: () => import("@/views/aiWealth/code/create/index.vue"),
+        meta: {
+          title: $t("aiWealth.code.name"),
+          showLink: false,
+          activePath: "/code"
+        }
+      }
+    ]
   }
 ] satisfies Array<RouteConfigsTable>;

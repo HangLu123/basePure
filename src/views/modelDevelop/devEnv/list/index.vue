@@ -55,7 +55,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>{{ t("aiWealth.model.name") }}</h1>
+  <h1>{{ t("modelDevelop.devEnv.name") }}</h1>
   <el-button @click="goDetail">打开详情页 </el-button>
   <el-button @click="addModel">新建模型 </el-button>
   <el-table :data="tableData" style="width: 100%">

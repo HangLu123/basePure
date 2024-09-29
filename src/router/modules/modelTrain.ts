@@ -1,34 +1,49 @@
 import { $t } from "@/plugins/i18n";
 const { VITE_HIDE_HOME } = import.meta.env;
+const Layout = () => import("@/layout/index.vue");
 
 export default [
   {
+    path: "/",
+    name: "Home",
+    component: Layout,
+    redirect: "/batchSubmit",
+    meta: {
+      title: $t("modelTrain.batchSubmit"),
+      icon: "ep:home-filled",
+      rank: 0
+    }
+  },
+  {
     path: "/batchSubmit",
     name: "BatchSubmit",
-    component: () => import("@/views/aiWealth/model/list/index.vue"),
+    component: () => import("@/views/modelTrain/batchSubmit/list/index.vue"),
     meta: {
       title: "批作业提交",
+      icon: "IF-icon-trainCenter",
       showLink: false
     },
     children: [
       {
-        path: "/model/detail",
+        path: "/batchSubmit/detail",
         name: "ModelDetail",
-        component: () => import("@/views/aiWealth/model/detail/index.vue"),
+        component: () =>
+          import("@/views/modelTrain/batchSubmit/detail/index.vue"),
         meta: {
-          title: $t("aiWealth.model"),
+          title: $t("modelTrain.batchSubmit"),
           showLink: false,
-          activePath: "/model"
+          activePath: "/batchSubmit"
         }
       },
       {
-        path: "/model/create",
+        path: "/batchSubmit/create",
         name: "ModelCreate",
-        component: () => import("@/views/aiWealth/model/create/index.vue"),
+        component: () =>
+          import("@/views/modelTrain/batchSubmit/create/index.vue"),
         meta: {
-          title: $t("aiWealth.model"),
+          title: $t("modelTrain.batchSubmit"),
           showLink: false,
-          activePath: "/model"
+          activePath: "/batchSubmit"
         }
       }
     ]
@@ -36,7 +51,7 @@ export default [
   {
     path: "/train",
     name: "Train",
-    component: () => import("@/views/detail/page/index.vue"),
+    component: () => import("@/views/modelTrain/train/list/index.vue"),
     meta: {
       title: "大模型训练",
       showLink: VITE_HIDE_HOME === "true" ? false : true
@@ -45,7 +60,8 @@ export default [
   {
     path: "/experimentManagement",
     name: "ExperimentManagement",
-    component: () => import("@/views/detail/page/index.vue"),
+    component: () =>
+      import("@/views/modelTrain/experimentManagement/list/index.vue"),
     meta: {
       title: "实验管理",
       showLink: VITE_HIDE_HOME === "true" ? false : true

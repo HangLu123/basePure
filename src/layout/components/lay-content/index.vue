@@ -127,6 +127,7 @@ const transitionMain = defineComponent({
                 display: 'flex',
                 flex: 'auto',
                 overflow: 'hidden',
+                background: '#F5F5F5',
                 'flex-direction': 'column'
               }"
             >

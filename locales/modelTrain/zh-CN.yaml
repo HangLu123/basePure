@@ -1,2 +1,7 @@
-abc:
-  def: 你好
+modelTrain:
+  batchSubmit:
+    name: 批作业提交
+  train:
+    name: 大模型训练
+  experimentManagement:
+    name: 实验管理

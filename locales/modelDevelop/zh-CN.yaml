@@ -1,2 +1,6 @@
-abc:
-  def: 你好
+modelDevelop:
+  devEnv:
+    name: 开发环境
+  visualModel:
+    name: 可视化建模
+

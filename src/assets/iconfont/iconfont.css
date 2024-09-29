@@ -1,9 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 2208059 */
-  src:
-    url("iconfont.woff2?t=1671895108120") format("woff2"),
-    url("iconfont.woff?t=1671895108120") format("woff"),
-    url("iconfont.ttf?t=1671895108120") format("truetype");
+  font-family: "iconfont"; /* Project id 4641565 */
+  src: url('iconfont.woff2?t=1727597249232') format('woff2'),
+       url('iconfont.woff?t=1727597249232') format('woff'),
+       url('iconfont.ttf?t=1727597249232') format('truetype');
 }
 
 .iconfont {
@@ -14,14 +13,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.pure-iconfont-tabs:before {
-  content: "\e63e";
+.icon-trainCenter:before {
+  content: "\e605";
 }
 
-.pure-iconfont-logo:before {
-  content: "\e620";
+.icon-dockerService:before {
+  content: "\e606";
 }
 
-.pure-iconfont-new:before {
-  content: "\e615";
+.icon-imageManage:before {
+  content: "\e607";
 }
+
+.icon-job:before {
+  content: "\e608";
+}
+
+.icon-devCenter:before {
+  content: "\e609";
+}
+
+.icon-a-zu489:before {
+  content: "\e601";
+}
+

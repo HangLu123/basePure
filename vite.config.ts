@@ -10,7 +10,7 @@ import {
 } from "./build/utils";
 
 //本地开发ip地址
-const DEV_IP = "https://192.168.10.32";
+const DEV_IP = "https://192.168.73.2";
 
 export default ({ mode }: ConfigEnv): UserConfigExport => {
   const { VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
@@ -66,7 +66,14 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
           secure: false, // if you want to verify the SSL Certs
           changeOrigin: true, // 是否是跨域请求?肯定是啊,不跨域就没有必要配置这个proxyTable了
           rewrite: path => path.replace("^/jhai", "/jhai")
-        }
+        },
+        // "/jhai": {
+        //   target: "wss://192.168.73.2",
+        //   ws: true,
+        //   secure: false, // if you want to verify the SSL Certs
+        //   changeOrigin: true, // 是否是跨域请求?肯定是啊,不跨域就没有必要配置这个proxyTable了
+        //   rewrite: path => path.replace("^/jhai", "/jhai")
+        // }
       },
       // 预热文件以提前转换和缓存结果，降低启动期间的初始页面加载时长并防止转换瀑布
       warmup: {

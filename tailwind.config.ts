@@ -7,6 +7,12 @@ export default {
   },
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
+    fontSize: {
+      sm: ["12px", "28px"],
+      base: ["16px", "24px"],
+      lg: ["20px", "28px"],
+      xl: ["24px", "32px"]
+    },
     extend: {
       colors: {
         bg_color: "var(--el-bg-color)",

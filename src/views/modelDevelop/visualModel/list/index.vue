@@ -48,9 +48,9 @@ const tableData = [
 ];
 
 onMounted(() => {
-  useUserStoreHook()
-    .getNameSpace()
-    .then((res: any) => {});
+  // useUserStoreHook()
+  //   .getNameSpace()
+  //   .then((res: any) => {});
 });
 </script>
 

@@ -7,7 +7,7 @@ defineOptions({
   name: "Welcome"
 });
 const goDetail = () => {
-  router.push("/model");
+  router.push("/devEnv");
 };
 </script>
 

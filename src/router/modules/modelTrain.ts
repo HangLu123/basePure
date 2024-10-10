@@ -54,6 +54,7 @@ export default [
     component: () => import("@/views/modelTrain/train/list/index.vue"),
     meta: {
       title: "大模型训练",
+      icon: "IF-icon-imageManage",
       showLink: VITE_HIDE_HOME === "true" ? false : true
     }
   },
@@ -64,6 +65,7 @@ export default [
       import("@/views/modelTrain/experimentManagement/list/index.vue"),
     meta: {
       title: "实验管理",
+      icon: "IF-icon-job",
       showLink: VITE_HIDE_HOME === "true" ? false : true
     }
   }

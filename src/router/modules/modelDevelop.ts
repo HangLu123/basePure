@@ -20,12 +20,13 @@ export default [
     component: () => import("@/views/modelDevelop/devEnv/list/index.vue"),
     meta: {
       title: "开发环境",
+      icon: "IF-icon-devCenter",
       showLink: false
     },
     children: [
       {
         path: "/devEnv/detail",
-        name: "ModelDetail",
+        name: "devEnvDetail",
         component: () => import("@/views/modelDevelop/devEnv/detail/index.vue"),
         meta: {
           title: $t("modelDevelop.devEnv"),
@@ -35,7 +36,7 @@ export default [
       },
       {
         path: "/devEnv/create",
-        name: "ModelCreate",
+        name: "devEnvCreate",
         component: () => import("@/views/modelDevelop/devEnv/create/index.vue"),
         meta: {
           title: $t("modelDevelop.devEnv"),
@@ -51,6 +52,7 @@ export default [
     component: () => import("@/views/modelDevelop/visualModel/list/index.vue"),
     meta: {
       title: "可视化模型",
+      icon: "IF-icon-imageManage",
       showLink: VITE_HIDE_HOME === "true" ? false : true
     },
     children: [

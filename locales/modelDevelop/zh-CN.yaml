@@ -1,6 +1,15 @@
 modelDevelop:
   devEnv:
     name: 开发环境
+    createBtn: 新建开发环境
+    detail: 环境详情
+    connectBtn: 连接
+    startBtn: 启动
+    stopBtn: 停止
+    modifyBtn: 修改
+    saveImage: 保存镜像
+    downloadLog: 下载日志
+    cancel: 取消
   visualModel:
     name: 可视化建模
 

@@ -127,9 +127,11 @@ const transitionMain = defineComponent({
                 display: 'flex',
                 flex: 'auto',
                 overflow: 'hidden',
-                background: '#F5F5F5',
-                padding: '20px',
-                'flex-direction': 'column'
+                background: '#fff',
+                padding: '16px',
+                margin: '16px',
+                'flex-direction': 'column',
+                height: 'calc(100% - 32px)'
               }"
             >
               <div class="grow">

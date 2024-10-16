@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { type userType, store, storageLocal } from "../utils";
+import { store, storageLocal } from "../utils";
 import {
   type UserResult,
   type RefreshTokenResult,
@@ -11,7 +11,7 @@ import { type DataInfo, userKey } from "@/utils/auth";
 
 export const useUserStore = defineStore({
   id: "pure-user",
-  state: (): userType => ({
+  state: (): any => ({
     // 头像
     avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
     // 用户名
@@ -24,7 +24,7 @@ export const useUserStore = defineStore({
     permissions:
       storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? [],
     // 是否勾选了登录页的免登录
-    isRemembered: false,
+    curEnv: {},
     // 登录页的免登录存储几天，默认7天
     loginDay: 7
   }),
@@ -50,8 +50,8 @@ export const useUserStore = defineStore({
       this.permissions = permissions;
     },
     /** 存储是否勾选了登录页的免登录 */
-    SET_ISREMEMBERED(bool: boolean) {
-      this.isRemembered = bool;
+    SET_CURENV(env: any) {
+      this.curEnv = env;
     },
     /** 设置登录页的免登录存储几天 */
     SET_LOGINDAY(value: number) {

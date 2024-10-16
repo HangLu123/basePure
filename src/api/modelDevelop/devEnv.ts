@@ -39,6 +39,14 @@ export const getEnvList = () => {
   return http.request<any>("post", `/jhai/devCenter/list`);
 };
 
+/** 创建镜像 */
+export const add = (data?: object) => {
+  return http.request<any>("post", "/jhai/devCenter/add", {
+    data,
+    headers: { "content-type": "application/x-www-form-urlencoded" }
+  });
+};
+
 /** 停止环境 */
 export const stop = (data?: object) => {
   return http.request<any>("post", "/jhai/devCenter/stop", {
@@ -53,11 +61,24 @@ export const start = (data?: object) => {
   });
 };
 
+/** 保存镜像 */
+export const save = (data?: object) => {
+  return http.request<any>("post", "/jhai/devCenter/saveImage", {
+    data,
+    headers: { "content-type": "application/x-www-form-urlencoded" }
+  });
+};
+
 /** 删除环境 */
 export const deleteEnv = (data?: object) => {
-  return http.request<any>("post", "/jhai/devCenter/delete?deleteImage=", {
+  return http.request<any>("post", "/jhai/devCenter/delete?deleteImage=false", {
     data
   });
+};
+
+/** 获取命名空间 */
+export const getNameSpace = () => {
+  return http.request<any>("get", `jhcontainer/namespace/list`);
 };
 
 export function getUserAuthor() {

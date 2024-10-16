@@ -1,11 +1,19 @@
 import { defineStore } from "pinia";
-import { type userType, store, storageLocal } from "../utils";
-import { getEnvList, stop, start, deleteEnv } from "@/api/modelDevelop/devEnv";
+import { store, storageLocal } from "../utils";
+import {
+  getEnvList,
+  add,
+  stop,
+  start,
+  save,
+  deleteEnv,
+  getNameSpace
+} from "@/api/modelDevelop/devEnv";
 import { type DataInfo, userKey } from "@/utils/auth";
 
 export const useEnvStore = defineStore({
-  id: "pure-user",
-  state: (): userType => ({
+  id: "jhai-env",
+  state: (): any => ({
     // 头像
     avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
     // 用户名
@@ -15,10 +23,9 @@ export const useEnvStore = defineStore({
     // 页面级别权限
     roles: storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [],
     // 按钮级别权限
-    permissions:
-      storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? [],
+    mounts: [],
     // 是否勾选了登录页的免登录
-    isRemembered: false,
+    curEnv: {},
     // 登录页的免登录存储几天，默认7天
     loginDay: 7
   }),
@@ -40,12 +47,12 @@ export const useEnvStore = defineStore({
       this.roles = roles;
     },
     /** 存储按钮级别权限 */
-    SET_PERMS(permissions: Array<string>) {
-      this.permissions = permissions;
+    SET_MOUNTS(mounts: Array<string>) {
+      this.mounts = mounts;
     },
     /** 存储是否勾选了登录页的免登录 */
-    SET_ISREMEMBERED(bool: boolean) {
-      this.isRemembered = bool;
+    SET_CURENV(env: any) {
+      this.curEnv = env;
     },
     /** 设置登录页的免登录存储几天 */
     SET_LOGINDAY(value: number) {
@@ -55,6 +62,18 @@ export const useEnvStore = defineStore({
     async getEnv() {
       return new Promise<any>((resolve, reject) => {
         getEnvList()
+          .then(data => {
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    /** 创建 */
+    async createEnv(data) {
+      return new Promise<any>((resolve, reject) => {
+        add(data)
           .then(data => {
             resolve(data);
           })
@@ -87,10 +106,34 @@ export const useEnvStore = defineStore({
           });
       });
     },
-    /** 启动 */
+    /** 保存镜像 */
+    async saveImage(data) {
+      return new Promise<any>((resolve, reject) => {
+        save(data)
+          .then(data => {
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    /** 删除 */
     async deleteDevEnv(data) {
       return new Promise<any>((resolve, reject) => {
         deleteEnv(data)
+          .then(data => {
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    /** 获取命名空间 */
+    async queryNameSpace() {
+      return new Promise<any>((resolve, reject) => {
+        getNameSpace()
           .then(data => {
             resolve(data);
           })

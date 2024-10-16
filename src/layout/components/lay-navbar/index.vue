@@ -1,150 +1,107 @@
 <script setup lang="ts">
-import { useNav } from "@/layout/hooks/useNav";
-import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
-import LaySidebarBreadCrumb from "../lay-sidebar/components/SidebarBreadCrumb.vue";
-import LaySidebarTopCollapse from "../lay-sidebar/components/SidebarTopCollapse.vue";
+import router from "@/router";
+import Back from "@iconify-icons/ep/back";
 
-import GlobalizationIcon from "@/assets/svg/globalization.svg?component";
-import AccountSettingsIcon from "@iconify-icons/ri/user-settings-line";
-import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
-import Setting from "@iconify-icons/ri/settings-3-line";
-import Check from "@iconify-icons/ep/check";
+interface Props {
+  home: string;
+  link: string;
+  title: string;
+  pageName?: string;
+  myclass?: string;
+}
 
-const {
-  layout,
-  device,
-  onPanel,
-  pureApp,
-  username,
-  userAvatar,
-  avatarsStyle,
-  toggleSideBar
-} = useNav();
+const props = defineProps<Props>();
 
-const { t, locale, translationCh, translationEn } = useTranslationLang();
+const linkBack = () => {
+  router.go(-1);
+};
 </script>
 
 <template>
-  <div class="navbar bg-[#fff] shadow-sm shadow-[rgba(0,21,41,0.08)]">
-    <LaySidebarTopCollapse
-      v-if="device === 'mobile'"
-      class="hamburger-container"
-      :is-active="pureApp.sidebar.opened"
-      @toggleClick="toggleSideBar"
-    />
-
-    <LaySidebarBreadCrumb
-      v-if="layout !== 'mix' && device !== 'mobile'"
-      class="breadcrumb-container"
-    />
-
-    <div v-if="layout === 'vertical'" class="vertical-header-right">
-      <!-- 国际化 -->
-      <el-dropdown id="header-translation" trigger="click">
-        <GlobalizationIcon
-          class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
-        />
-        <template #dropdown>
-          <el-dropdown-menu class="translation">
-            <el-dropdown-item @click="translationCh">
-              <IconifyIconOffline
-                v-show="locale === 'zh'"
-                class="check-zh"
-                :icon="Check"
-              />
-              简体中文
-            </el-dropdown-item>
-            <el-dropdown-item @click="translationEn">
-              <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check" />
-              </span>
-              English
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-      <span
-        class="set-icon navbar-bg-hover"
-        title="打开系统配置"
-        @click="onPanel"
-      >
-        <IconifyIconOffline :icon="Setting" />
-      </span>
+  <div
+    class="backNav border-b border-gray-300 p-5 box-border"
+    :class="props.myclass ? 'myDetail' : ''"
+  >
+    <!-- 面包屑导航 -->
+    <el-breadcrumb separator="/" class="text-sm">
+      <el-breadcrumb-item :to="{ path: props.link }">{{
+        props.home
+      }}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ props.title }}</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="backBtnContainer flex justify-between items-center">
+      <!-- 返回标题部分 -->
+      <div class="backNavTitle flex items-center">
+        <div
+          class="back flex items-center cursor-pointer text-blue-500 hover:text-blue-400 hover:bg-gray-200 rounded-full transition duration-300 ease-linear"
+        >
+          <IconifyIconOffline
+            :icon="Back"
+            width="24"
+            height="24"
+            class="backIcon"
+            @click="linkBack"
+          />
+        </div>
+        <el-text class="title ml-4 font-bold text-lg">
+          {{ props.pageName || props.title }}</el-text
+        >
+      </div>
+      <div>
+        <slot name="detailBtn" />
+      </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.navbar {
-  width: 100%;
-  height: 48px;
-  overflow: hidden;
-
-  .hamburger-container {
-    float: left;
-    height: 100%;
-    line-height: 48px;
-    cursor: pointer;
+<style scoped lang="scss">
+.backNav {
+  box-sizing: border-box;
+  padding: 20px 20px 7px 20px;
+  :deep(.ivu-breadcrumb) {
+    font-size: 12px;
   }
-
-  .vertical-header-right {
+  .backBtnContainer {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: flex-end;
-    min-width: 280px;
-    height: 48px;
-    color: #000000d9;
-
-    .el-dropdown-link {
+    .backNavTitle {
       display: flex;
       align-items: center;
-      justify-content: space-around;
-      height: 48px;
-      padding: 10px;
-      color: #000000d9;
-      cursor: pointer;
-
-      p {
-        font-size: 14px;
+      justify-content: flex-start;
+      font-family: Source Han Sans CN;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 17px;
+      letter-spacing: 0em;
+      padding: 14px 0;
+      .back {
+        display: flex;
+        align-items: center;
+        .backIcon {
+          cursor: pointer;
+          color: #2d8cf0;
+          border-radius: 9999px;
+          transition: all 0.3s linear; /* 过渡效果 */
+        }
+        .backIcon:hover {
+          color: #57a3f3;
+          background-color: rgba(0, 0, 0, 0.1);
+        }
       }
-
-      img {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
+      .title {
+        display: inline-block;
+        margin-left: 18px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .status {
+        min-width: 300px;
       }
     }
   }
-
-  .breadcrumb-container {
-    float: left;
-    margin-left: 16px;
-  }
 }
-
-.translation {
-  ::v-deep(.el-dropdown-menu__item) {
-    padding: 5px 40px;
-  }
-
-  .check-zh {
-    position: absolute;
-    left: 20px;
-  }
-
-  .check-en {
-    position: absolute;
-    left: 20px;
-  }
-}
-
-.logout {
-  width: 120px;
-
-  ::v-deep(.el-dropdown-menu__item) {
-    display: inline-flex;
-    flex-wrap: wrap;
-    min-width: 100%;
-  }
+.myDetail {
+  border: none;
 }
 </style>

@@ -12,8 +12,8 @@ import log from "./log.vue";
 import { message } from "@/utils/message";
 import { ChartLine } from "../charts";
 import { languageType } from "@/utils/language-set";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { localForage } from "@/utils/localforage";
+import { formatUnit, openServer } from "@/utils/pub-use";
+import Search from "@iconify-icons/ep/search";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { Icon as IconifyIcon } from "@iconify/vue";
 import { addDialog } from "@/components/ReDialog";
@@ -28,11 +28,8 @@ if (languageType == "zh") {
 defineOptions({
   name: "Welcome"
 });
-const addModel = () => {
-  localForage().setItem("name", "leon");
-  router.push("/model/create");
-};
-const goDetail = () => {
+const goDetail = (env: any) => {
+  useEnvStoreHook().SET_CURENV(env);
   router.push("/devEnv/detail");
 };
 const envs = ref([]);
@@ -74,7 +71,7 @@ const createNewEnv = () => {
   console.log("新建开发环境");
   router.push("/devEnv/create");
 };
-const stop = id => {
+const stop = (id, lastSave) => {
   addDialog({
     title: "停止环境",
     sureBtnLoading: true,
@@ -91,7 +88,7 @@ const stop = id => {
           <a
             className="mr-2 ml-2"
             style={{ color: "#0052d9" }}
-            onClick={saveSnapshot}
+            onClick={() => saveSnapshot(id, lastSave)}
           >
             保存镜像
           </a>
@@ -135,7 +132,10 @@ const modifyEnv = index => {
   console.log("新建开发环境");
   router.push("/devEnv/create");
 };
-const saveSnapshot = index => {
+const saveSnapshot = (id, lastSave) => {
+  // 如果 lastSave 不是 null 并且可以被分割成数组
+  const formValues = lastSave ? lastSave.split(/[:\/]/) : [];
+
   addDialog({
     width: "30%",
     title: "保存镜像",
@@ -143,24 +143,33 @@ const saveSnapshot = index => {
     props: {
       // 赋默认值
       formInline: {
-        user: "",
-        region: "0"
+        image: formValues[1] || "", // 如果 formValues 长度不够，使用默认值 ""
+        version: formValues[2] || "", // 如果 formValues 长度不够，使用默认值 ""
+        namespace: formValues[0] || 0 // 如果 formValues 长度不够，使用默认值 0
       }
     },
-    closeCallBack: ({ options, args }) => {
-      // options.props 是响应式的
+    beforeSure: (done, { options, index }) => {
       const { formInline } = options.props as FormProps;
-      const text = `姓名：${formInline.user} 城市：${formInline.region}`;
-      if (args?.command === "cancel") {
-        // 您点击了取消按钮
-        message(`您点击了取消按钮，当前表单数据为 ${text}`);
-      } else if (args?.command === "sure") {
-        message(`您点击了确定按钮，当前表单数据为 ${text}`);
-      } else {
-        message(
-          `您点击了右上角关闭按钮或空白页或按下了esc键，当前表单数据为 ${text}`
-        );
-      }
+      const nameSpace = formInline.namespaceList.find(
+        item => item.value === formInline.namespace
+      ).label;
+      useEnvStoreHook()
+        .saveImage({
+          id,
+          repository: formInline.image,
+          repositoryID: formInline.namespace,
+          nameSpace,
+          tag: formInline.version
+        })
+        .then((res: any) => {
+          if (res.isSuccess) {
+            onSearch();
+            done();
+          } else {
+          }
+        })
+        .finally();
+      // done(); // 需要关闭把注释解开即可
     }
   });
 };
@@ -176,24 +185,10 @@ const viewLog = index => {
         region: "0"
       }
     },
-    closeCallBack: ({ options, args }) => {
-      // options.props 是响应式的
-      const { formInline } = options.props as FormProps;
-      const text = `姓名：${formInline.user} 城市：${formInline.region}`;
-      if (args?.command === "cancel") {
-        // 您点击了取消按钮
-        message(`您点击了取消按钮，当前表单数据为 ${text}`);
-      } else if (args?.command === "sure") {
-        message(`您点击了确定按钮，当前表单数据为 ${text}`);
-      } else {
-        message(
-          `您点击了右上角关闭按钮或空白页或按下了esc键，当前表单数据为 ${text}`
-        );
-      }
-    }
+    closeCallBack: ({ options, args }) => {}
   });
 };
-const deleteEnv = (id, status, serviceName) => {
+const deleteEnv = (id, status, serviceName, lastSave) => {
   addDialog({
     title: "删除开发环境",
     sureBtnLoading: true,
@@ -211,7 +206,7 @@ const deleteEnv = (id, status, serviceName) => {
             <a
               className="mr-2 ml-2"
               style={{ color: "#0052d9" }}
-              onClick={saveSnapshot}
+              onClick={() => saveSnapshot(id, lastSave)}
             >
               保存镜像
             </a>
@@ -265,13 +260,20 @@ onMounted(() => {
           v-model="searchQuery"
           placeholder="请输入环境名称..."
           clearable
-        />
+        >
+          <template #suffix>
+            <IconifyIconOffline
+              :icon="Search"
+              class="text-primary w-[36px] h-[16px]"
+            />
+          </template>
+        </el-input>
         <el-button :icon="RefreshRight" @click="onSearch" />
       </div>
     </el-row>
 
     <!-- 环境列表 -->
-    <el-scrollbar height="calc(100vh - 180px)">
+    <el-scrollbar height="calc(100vh - 210px)">
       <el-row class="env-list">
         <el-col v-for="(env, index) in filteredEnvs" :key="index" :span="24">
           <el-card class="mb-2.5">
@@ -282,18 +284,21 @@ onMounted(() => {
                   class="mr-2 ml-2"
                   :underline="false"
                   type="primary"
-                  @click="goDetail"
+                  @click="goDetail(env)"
                   >{{ env.serviceName }}</el-link
                 >
                 <span class="">({{ env.status }})</span>
                 <div class="button-group">
                   <el-button
-                    v-if="env.status !== '运行'"
+                    v-if="env.status === '退出'"
                     class="first"
                     @click="start(env.id)"
                     >启动</el-button
                   >
-                  <el-button v-else class="first" @click="stop(env.id)"
+                  <el-button
+                    v-else
+                    class="first"
+                    @click="stop(env.id, env.devCenterExternal.saveImageName)"
                     >停止</el-button
                   >
                   <el-button
@@ -303,13 +308,22 @@ onMounted(() => {
                   >
                   <el-button
                     :disabled="env.status !== '运行'"
-                    @click="saveSnapshot(index)"
+                    @click="
+                      saveSnapshot(env.id, env.devCenterExternal.saveImageName)
+                    "
                     >保存镜像</el-button
                   >
                   <el-button @click="viewLog(index)">环境日志</el-button>
                   <el-button
                     class="end"
-                    @click="deleteEnv(env.id, env.status, env.serviceName)"
+                    @click="
+                      deleteEnv(
+                        env.id,
+                        env.status,
+                        env.serviceName,
+                        env.devCenterExternal.saveImageName
+                      )
+                    "
                     >删除</el-button
                   >
                 </div>
@@ -327,14 +341,16 @@ onMounted(() => {
                 <el-descriptions-item label="创建时间:">
                   {{ env.submitTime }}
                 </el-descriptions-item>
-                <el-descriptions-item label="CPU:">
-                  {{ env.image }}
+                <el-descriptions-item label="GPU(卡):">
+                  {{ env.gpu }}
                 </el-descriptions-item>
-                <el-descriptions-item label="内存:">
-                  {{ env.memory }}
+                <el-descriptions-item v-if="env.cpuUsageRate" label="CPU(核):">
+                  {{ `${env.cpu},使用率：${env.cpuUsageRate.toFixed(2)}%` }}
                 </el-descriptions-item>
-                <el-descriptions-item label="GPU:">
-                  {{ env.image }}
+                <el-descriptions-item v-if="env.memUsageRate" label="内存:">
+                  {{
+                    `${formatUnit(env.memUsage)}/${formatUnit(env.memLimit)},使用率${env.memUsageRate.toFixed(2)}%`
+                  }}
                 </el-descriptions-item>
               </el-descriptions>
             </div>
@@ -342,9 +358,13 @@ onMounted(() => {
             <!-- VSCode 和 SSH 图标 -->
             <div class="env-actions relative">
               <el-card
-                v-if="env.serviceType !== 'SSH'"
+                v-if="
+                  env.serviceType === 'JupyterLab' ||
+                  env.serviceType === 'VSCode'
+                "
                 class="cursor-pointer"
                 :class="env.status === '运行' ? 'run' : 'notRun'"
+                @click="openServer(env.serviceUrl, env.serviceName)"
               >
                 <div
                   class="flex flex-row w-44 h-10 justify-between items-center"
@@ -357,15 +377,8 @@ onMounted(() => {
                     v-if="env.serviceType === 'VSCode'"
                     src="@/assets/devEnv/vscode.png"
                   />
-                  <desktopClientIcon
-                    v-if="env.serviceType === 'Desktop'"
-                    class="w-14 h-14"
-                  />
                   <div>
                     <p>{{ env.serviceType }}</p>
-                    <p v-if="env.serviceType === 'Desktop'" class="text-sm">
-                      Open in client
-                    </p>
                   </div>
                   <img src="@/assets/devEnv/jiantou.png" />
                 </div>
@@ -374,6 +387,36 @@ onMounted(() => {
                 v-if="env.serviceType === 'Desktop'"
                 class="cursor-pointer"
                 :class="env.status === '运行' ? 'run' : 'notRun'"
+                @click="openServer(env.serviceUrl, env.serviceName)"
+              >
+                <div
+                  v-if="env.serviceType === 'Desktop'"
+                  class="flex flex-row w-44 h-10 justify-between items-center"
+                  @click="
+                    openServer(
+                      `/dockerServiceEntrance/desktop?id=${env.id}`,
+                      `Web终端${env.id}`
+                    )
+                  "
+                >
+                  <desktopClientIcon class="w-14 h-14" />
+                  <div>
+                    <p>{{ env.serviceType }}</p>
+                    <p class="text-sm">Open in client</p>
+                  </div>
+                  <img src="@/assets/devEnv/jiantou.png" />
+                </div>
+              </el-card>
+              <el-card
+                v-if="env.serviceType === 'Desktop'"
+                class="cursor-pointer"
+                :class="env.status === '运行' ? 'run' : 'notRun'"
+                @click="
+                  openServer(
+                    `/dockerServiceEntrance/desktop?id=${env.id}`,
+                    `Web终端${env.id}`
+                  )
+                "
               >
                 <div
                   class="flex flex-row w-44 h-10 justify-between items-center"
@@ -389,6 +432,12 @@ onMounted(() => {
               <el-card
                 class="cursor-pointer"
                 :class="env.status === '运行' ? 'run' : 'notRun'"
+                @click="
+                  openServer(
+                    `/dockerServiceEntrance/command?id=${env.id}`,
+                    `Web终端${env.id}`
+                  )
+                "
               >
                 <div
                   class="flex flex-row w-44 h-10 justify-between items-center"
@@ -398,9 +447,9 @@ onMounted(() => {
                   <img src="@/assets/devEnv/jiantou.png" />
                 </div>
               </el-card>
-
               <!-- 资源chart -->
               <div
+                v-if="false"
                 class="w-1/3 flex justify-center h-60 absolute -bottom-12 -right-28"
               >
                 <ChartLine
@@ -443,10 +492,6 @@ onMounted(() => {
 .top-right {
   display: flex;
   gap: 10px;
-}
-
-.env-list {
-  padding: 0 20px;
 }
 
 .env-title {

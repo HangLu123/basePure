@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import type { ComponentSize, FormInstance, FormRules } from "element-plus";
 import { JhCustomImageSelect } from "jh-web-components";
-import ResourceCombo from "@/components/resourceCombo/ResourceCombo.vue";
+import Description from "@/components/description/index.vue";
+import Terminal from "@/components/terminal/index.vue";
 import Mount from "@/components/mount/index.vue";
 import "jh-web-components/dist/style.css";
 import { useEnvStoreHook } from "@/store/modules/devEnv";
@@ -61,6 +62,109 @@ const labels = computed(() => {
 });
 
 const tab = ref("showInfo");
+
+onMounted(() => {
+  queryDetail(useEnvStoreHook().curEnv);
+});
+function queryDetail(curEnv: any) {
+  const basicValue = [
+    {
+      label: t("modelDevelop.devEnv.envName"),
+      value: curEnv.serviceName
+    },
+    {
+      label: t("modelDevelop.devEnv.creater"),
+      value: curEnv.submitTime
+    },
+    {
+      label: t("modelDevelop.devEnv.serviceType"),
+      value: curEnv.serviceType
+    },
+    {
+      label: t("modelDevelop.devEnv.jobNum"),
+      value: curEnv.jobId
+    },
+    {
+      label: t("modelDevelop.devEnv.createTime"),
+      value: curEnv.submitTime
+    },
+    {
+      label: t("modelDevelop.devEnv.resourceCombo"),
+      value: curEnv.resourceComboName
+    },
+    {
+      label: t("modelDevelop.devEnv.shmSize"),
+      value:
+        (curEnv.devCenterExternal && curEnv.devCenterExternal.shmSize) || ""
+    },
+    {
+      label: t("modelDevelop.devEnv.status"),
+      value: curEnv.status
+    },
+    {
+      label: t("modelDevelop.devEnv.node"),
+      value: curEnv.node
+    },
+    {
+      label: t("modelDevelop.devEnv.description"),
+      value: curEnv.description
+    },
+    {
+      label: t("modelDevelop.devEnv.servicePort"),
+      value: curEnv.serviceContainerPort
+    }
+  ];
+  curEnv.conf
+    ? basicValue.push({
+        label: t("modelDevelop.devEnv.secretlevel"),
+        value: t(`modelDevelop.devEnv.secretlevel${curEnv.conf}`)
+      })
+    : "";
+  detailInfo.value = [
+    {
+      label: t("modelDevelop.devEnv.basicInfo"),
+      value: basicValue
+    },
+    {
+      label: t("modelDevelop.devEnv.imageInfo"),
+      value: [
+        {
+          label: t("modelDevelop.devEnv.imageName"),
+          value: curEnv.imageName
+        }
+      ]
+    },
+    {
+      label: t("modelDevelop.devEnv.mountInfo"),
+      value: [
+        {
+          label: t("modelDevelop.devEnv.dateSet"),
+          value: curEnv.dataSets
+        }
+      ]
+    }
+  ];
+  if (curEnv.status == "运行" && curEnv.devCenterExternal.ssh !== null) {
+    detailInfo.value.push({
+      label: t("modelDevelop.devEnv.sshInfo"),
+      column: 1,
+      value: [
+        {
+          label: t("modelDevelop.devEnv.sshConnect"),
+          value: `ssh ${curEnv.devCenterExternal.ssh.sshName}@${curEnv.devCenterExternal.ssh.sshIp} -p ${curEnv.devCenterExternal.ssh.sshPort}`,
+          type: "copy"
+        },
+        {
+          label: t("modelDevelop.devEnv.password"),
+          value: curEnv.devCenterExternal.ssh.sshPassword,
+          type: "password"
+        }
+      ]
+    });
+  }
+}
+
+const detailInfo = ref([]);
 
 const rules = reactive<FormRules<EnvForm>>({
   name: [
@@ -144,30 +248,30 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       </template>
     </BackNav>
     <div class="tabContainer">
-      <el-tabs v-model="tab" :animated="false">
+      <el-tabs v-model="tab" :animated="false" class="h-full">
         <el-tab-pane
-          :label="t('job.detail.title')"
-          class="el-tab-pane thinScrollbar"
+          :label="t('modelDevelop.devEnv.title')"
+          class="el-tab-pane thinScrollbar h-full"
           name="showInfo"
         >
-          <!-- <ShowInfo :detailInfo="detailInfo" /> -->
+          <Description :detailInfo="detailInfo" />
         </el-tab-pane>
         <el-tab-pane
-          :label="t('job.detail.checkpoint')"
+          :label="t('modelDevelop.devEnv.envLog')"
           class="el-tab-pane thinScrollbar"
           name="checkPoint"
         >
           <!-- <CheckPoint :id="curJob" :tab="tab" /> -->
         </el-tab-pane>
         <el-tab-pane
-          :label="t('task.evaluation.pageName')"
-          class="el-tab-pane thinScrollbar"
+          :label="t('modelDevelop.devEnv.webTerminal')"
+          class="el-tab-pane thinScrollbar h-full"
           name="Evaluation"
         >
-          <!-- <Evaluation :id="curJob" :tab="tab" /> -->
+          <Terminal />
         </el-tab-pane>
         <el-tab-pane
-          :label="t('job.detail.trainLog')"
+          :label="t('modelDevelop.devEnv.resourceMonitor')"
           class="el-tab-pane thinScrollbar"
           name="trainLog"
         >
@@ -213,9 +317,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     :deep(.ivu-tabs-nav-container) {
       padding: 0 20px;
     }
-    .tabPane {
-      height: calc(100vh - 144px);
-    }
+    // .tabPane {
+    //   height: calc(100vh - 144px);
+    // }
   }
 }
 .modalContent {

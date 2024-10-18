@@ -30,7 +30,7 @@ const { t } = useI18n();
 import { useCommonStoreHook } from "@/store/modules/common";
 import { ElMessage } from "element-plus";
 const emit = defineEmits<{
-  (e: "update-dataList", path: string): void;
+  (e: "update-path", path: string): void;
 }>();
 const chooseFileRef = ref();
 let loginUserName = "jhadmin";
@@ -57,7 +57,7 @@ const getChooseFile = async () => {
       ElMessage("请选择文件夹。");
       return;
     }
-    emit("update-dataList", files[0].canonicalPath);
+    emit("update-path", files[0].canonicalPath);
     useCommonStoreHook().toggleShowFileChoose(false);
   }
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import type { ComponentSize, FormInstance, FormRules } from "element-plus";
 import { JhCustomImageSelect } from "jh-web-components";
@@ -89,11 +89,50 @@ const rules = reactive<FormRules<EnvForm>>({
       message: "Please select activity resource",
       trigger: ["change", "blur"]
     }
+  ],
+  //mounts这个数组的验证规则，name和point都不能为空，且point要已/开头。
+  mounts: [
+    {
+      validator: (rule, value, callback) => {
+        if (!Array.isArray(value) || value.length === 0) {
+          callback(new Error("Mounts array cannot be empty"));
+          return;
+        }
+
+        for (const item of value) {
+          if (!item.name) {
+            callback(new Error("Name cannot be empty"));
+            return;
+          }
+          if (!item.point) {
+            callback(new Error("Point cannot be empty"));
+            return;
+          }
+          if (!item.point.startsWith("/")) {
+            callback(new Error("Point must start with '/'"));
+            return;
+          }
+        }
+
+        // If all validations passed
+        callback();
+      },
+      trigger: "blur"
+    }
   ]
 });
 
 const path = ref("");
 
+watch(
+  () => [envForm.image, envForm.resource],
+  newVal => {
+    ["image", "resource"].forEach(prop => {
+      envFormRef.value.validateField(prop);
+    });
+  },
+  { deep: true }
+);
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
@@ -191,7 +230,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           @click="submitForm(envFormRef)"
           >{{ t("modelDevelop.devEnv.createBtn") }}</el-button
         >
-        <el-button class="px-4 ml-2" @click="router.push('/taskList')">{{
+        <el-button class="px-4 ml-2" @click="router.push('/devEnv')">{{
           t("modelDevelop.devEnv.cancel")
         }}</el-button>
       </div>

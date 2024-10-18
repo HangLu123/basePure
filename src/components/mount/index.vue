@@ -82,7 +82,7 @@ watch(
       </template>
     </pure-table>
   </div>
-  <FileDialog @update-dataList="updataList" />
+  <FileDialog @update-path="updataList" />
 </template>
 
 <style scoped>

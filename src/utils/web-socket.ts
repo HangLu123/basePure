@@ -35,7 +35,7 @@ class JhWebSocket {
     this.instance.onmessage = this.onmessage.bind(this);
     this.instance.onclose = this.onclose.bind(this);
     this.allowConnect = true;
-    this.eventObj["RESET"]();
+    this.eventObj["RESET"] && this.eventObj["RESET"]();
   }
   //关闭连接
   close() {

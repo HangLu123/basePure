@@ -14,7 +14,9 @@ export function useColumns(props: any) {
     {
       label: "挂载点",
       prop: "hobby",
-      cellRenderer: ({ row }) => <el-input v-model={row.point} />
+      cellRenderer: ({ row, index }) => (
+        <el-input disabled={index < 2} v-model={row.point} />
+      )
     },
     {
       label: "操作",

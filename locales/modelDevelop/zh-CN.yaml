@@ -1,7 +1,6 @@
 modelDevelop:
   devEnv:
     name: 开发环境
-    createBtn: 新建开发环境
     detail: 环境详情
     connectBtn: 连接
     startBtn: 启动
@@ -10,6 +9,33 @@ modelDevelop:
     saveImage: 保存镜像
     downloadLog: 下载日志
     cancel: 取消
+    basicInfo: 基本信息
+    envName: 环境名称
+    creater: 创建人
+    serviceType: 服务类型
+    jobNum: 作业编号
+    createTime: 创建时间
+    resourceCombo: 资源组合
+    shmSize: 共享内存大小
+    status: 状态
+    node: 节点
+    description: 描述
+    servicePort: 服务端口
+    imageInfo: 镜像信息
+    imageName: 镜像名称
+    mountInfo: 挂载信息
+    dateSet: 数据集
+    title: 环境信息
+    webTerminal: Web终端
+    resourceMonitor: 资源监控
+    envLog: 环境日志
+    secretlevel: 密级
+    secretlevel999999999: 公开
+    secretlevel999999998: 内部
+    secretlevel999999997: 秘密
+    secretlevel999999996: 机密
+    sshInfo: SSH登录信息
+    sshConnect: SSH连接
+    password: 密码
   visualModel:
     name: 可视化建模
-

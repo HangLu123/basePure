@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { store, storageLocal } from "../utils";
+import { store } from "../utils";
 import {
   getEnvList,
   add,
@@ -9,56 +9,23 @@ import {
   deleteEnv,
   getNameSpace
 } from "@/api/modelDevelop/devEnv";
-import { type DataInfo, userKey } from "@/utils/auth";
 
 export const useEnvStore = defineStore({
   id: "jhai-env",
   state: (): any => ({
-    // 头像
-    avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
-    // 用户名
-    username: storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? "",
-    // 昵称
-    nickname: storageLocal().getItem<DataInfo<number>>(userKey)?.nickname ?? "",
-    // 页面级别权限
-    roles: storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [],
-    // 按钮级别权限
     mounts: [],
-    // 是否勾选了登录页的免登录
-    curEnv: {},
-    // 登录页的免登录存储几天，默认7天
-    loginDay: 7
+    curEnv: {}
   }),
   actions: {
-    /** 存储头像 */
-    SET_AVATAR(avatar: string) {
-      this.avatar = avatar;
-    },
-    /** 存储用户名 */
-    SET_USERNAME(username: string) {
-      this.username = username;
-    },
-    /** 存储昵称 */
-    SET_NICKNAME(nickname: string) {
-      this.nickname = nickname;
-    },
-    /** 存储角色 */
-    SET_ROLES(roles: Array<string>) {
-      this.roles = roles;
-    },
-    /** 存储按钮级别权限 */
+    /** 存储挂载 */
     SET_MOUNTS(mounts: Array<string>) {
       this.mounts = mounts;
     },
-    /** 存储是否勾选了登录页的免登录 */
+    /** 存储当前环境信息 */
     SET_CURENV(env: any) {
       this.curEnv = env;
     },
-    /** 设置登录页的免登录存储几天 */
-    SET_LOGINDAY(value: number) {
-      this.loginDay = Number(value);
-    },
-    /** 登入 */
+    /** 查询环境列表 */
     async getEnv() {
       return new Promise<any>((resolve, reject) => {
         getEnvList()
